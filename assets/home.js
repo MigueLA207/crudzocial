@@ -18,6 +18,12 @@ const openUpdateUser = document.getElementById('openUpdateUser');
 const updateUserForm = document.getElementById('formUpdate');
 const applyUpdate = document.getElementById('applyUpdate');
 const btnLogs = document.getElementById('logs');
+const imageneeee = document.getElementById('imageneeee')
+const addImageContainer = document.getElementById('addImage')
+const btnImages = document.getElementById('images');
+const imageInputUrl = document.getElementById("imageInputUrl");
+const uploadImageBtn = document.getElementById("uploadImageBtn");
+const galleryContainer = document.getElementById("galleryContainer");
 
 
 let activeUser = localStorage.getItem("userId");
@@ -49,11 +55,76 @@ function renderInfoPage(context,textContext){
 }
 
 function clearSections() {
-    // Oculta el formulario de actualización si está visible
     updateUserForm.classList.add("d-none");
-    // Oculta la tabla de logs si está visible
+    addImageContainer.classList.add('d-none');
     document.getElementById('logsTable').classList.add('d-none');
-    // Puedes ocultar otras secciones que vayas agregando aquí
+  
+    imageInputUrl.classList.add('d-none');
+    document.getElementById('gallerySection').classList.add('d-none');
+}
+
+//añadir imagenes
+function renderGallery() {
+  galleryContainer.innerHTML = "";
+  const images = userComponents.images || [];
+
+  images.forEach((img, i) => {
+    const col = document.createElement("div");
+    col.className = "col-md-4 mb-3";
+    col.innerHTML = `
+      <div class="card">
+        <img src="${img}" class="card-img-top" alt="Imagen ${i + 1}" width="100" height="200">
+        <div class="card-body text-center">
+          <button class="btn btn-danger btn-sm" onclick="deleteImage(${i})">Eliminar</button>
+        </div>
+      </div>
+    `;
+    galleryContainer.appendChild(col);
+  });
+}
+
+function deleteImage(index) {
+  userComponents.images.splice(index, 1);
+  const userIndex = usersRegistered.findIndex(user => user.email === activeUser);
+  if (userIndex !== -1) {
+    usersRegistered[userIndex].images = userComponents.images;
+    localStorage.setItem("users", JSON.stringify(usersRegistered));
+  }
+  renderGallery();
+  addLogs("Eliminó una imagen", () => {});
+}
+
+uploadImageBtn.addEventListener("click", () => {
+  const imageUrl = imageInputUrl.value.trim();
+  if (!imageUrl || !imageUrl.startsWith("http")) {
+    alert("Por favor, ingrese una URL válida de imagen.");
+    return;
+  }
+
+  addLogs("Subió una nueva imagen", () => {
+    userComponents.images.push(imageUrl);
+    const userIndex = usersRegistered.findIndex(user => user.email === activeUser);
+    if (userIndex !== -1) {
+      usersRegistered[userIndex].images = userComponents.images;
+      localStorage.setItem("users", JSON.stringify(usersRegistered));
+    }
+    imageInputUrl.value = "";
+    renderGallery();
+  });
+});
+
+renderGallery();
+
+function showImages(){
+    clearSections();
+    renderInfoPage('Añade ','Gestiona tus imágenes, notas y logs desde aquí de forma rápida.');
+    addImageContainer.classList.remove('d-none');
+    imageInputUrl.classList.remove('d-none')
+    mainTitle.classList.remove('d-none')
+    document.getElementById('gallerySection').classList.remove('d-none');
+
+
+    bsOffcanvas.hide();
 }
 
 
@@ -156,11 +227,20 @@ function renderLogsTable(){
             </tr>
         `
     }); 
-
+    
     renderInfoPage('Registro de actividad','Consulta aquí las actividades recientes de tu cuenta.')
     bsOffcanvas.hide();
 };
 
+function showLogs(){
+    clearSections();
+    renderInfoPage('Historial', 'Aquí puedes ver tus acciones realizada en la pagina');
+
+    document.getElementById('logsTable').classList.remove('d-none')
+
+
+    bsOffcanvas.hide();
+}
 
 function logOut(){
     localStorage.removeItem("auth"); 
@@ -172,13 +252,5 @@ function logOut(){
 openUpdateUser.addEventListener("click",loadDataUpdate);
 applyUpdate.addEventListener("click", () => addLogs("Actualizó datos del usuario", applyUpdateValues));
 btnLogOut.addEventListener("click", () => addLogs("Cierre de Sesión",logOut));
+btnImages.addEventListener("click",showImages);
 btnLogs.addEventListener("click",renderLogsTable)
-
-
-
-
-
-
-
-
-
