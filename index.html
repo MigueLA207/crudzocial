@@ -44,7 +44,7 @@
     <div class="offcanvas-body d-flex flex-column">
       <ul class="nav flex-column mb-3">
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">📷 Imágenes</a>
+          <a class="nav-link text-dark" href="#" id="images">📷 Imágenes</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="#">📝 Notas</a>
@@ -67,11 +67,34 @@
   </div>
 
   <main class="container py-4">
-    <h1 class="text-success fw-bold" id="mainTitle">Panel de Control</h1>
+    <h1 class="text-success fw-bold" id="mainTitle">Añade </h1>
     <p class="text-muted" id="mainText">Gestiona tus imágenes, notas y logs desde aquí de forma rápida.</p>
     <!-- <button onclick="logs('monda')">test</button> -->
     <div class="card mt-4">
       <div class="card-body" id="containerMain">
+
+      <!-- Añadir imagenes -->
+      
+      <div class="mt-4" id="addImage">
+        <div class="card-body">
+           <h4 class="text-success">Añadir imagen</h4>
+           <div class="mb-3">
+            <label for="imageInputUrl" class="form-label">Pega el enlace de la imagen</label>
+            <input  class="form-control" type="url" id="imageInputUrl" placeholder="https://example.com/image.jpg">
+           </div>
+           <button class="btn btn-success" id="uploadImageBtn">Subir Imagen</button>
+        </div>
+      </div>
+
+       <div class=" mt-4" id="gallerySection">
+          <div class="card-body">
+            <h4 class="text-success">📁 Tus imágenes</h4>
+            <div class="row" id="galleryContainer">
+              <!-- Se cargarán las imágenes aquí -->
+            </div>
+          </div>
+        </div>
+      
         <div class="card mt-sm-3 d-none" id="formUpdate"> <!-- d-none-->
           <div class="card-body">
             <h2 class="text-center text-success fw-bold">Actualizar Datos de usuario</h2>
